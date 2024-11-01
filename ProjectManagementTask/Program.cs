@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ProjectManagement.Configurations;
+using ProjectManagement.Helpers;
 using ProjectManagement.Models;
+using ProjectManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ProjectManagement.Data.DbContext>(opts =>
@@ -11,7 +14,8 @@ builder.Services.AddDbContext<ProjectManagement.Data.DbContext>(opts =>
 // Add services to the container.
 
 builder.Services.AddControllers();
-
+builder.Services.AddGenericServices();
+builder.Services.AddRepositories();
 builder.Services.AddIdentity<User, Role>(setup =>
 {
     setup.Password.RequireDigit = false;
@@ -31,6 +35,7 @@ builder.Services.AddIdentity<User, Role>(setup =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(DbContextProfile).Assembly);
 
 var app = builder.Build();
 

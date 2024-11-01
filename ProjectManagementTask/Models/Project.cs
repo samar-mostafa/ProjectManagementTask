@@ -17,15 +17,9 @@ namespace ProjectManagement.Models
         public DateTime EndDate { get; set; }
         public double Budget { get; set; }
         public string Owner { get; set; } = null!;
-        public int Status { get; set; }
-
-        [ForeignKey(nameof(CreatedBy))]
-        public int? CreatedById { get; set; }
-        [ForeignKey(nameof(LastModifiedBy))]
-        public int? LastModifiedById { get; set; }
+        public bool Status { get; set; }
         public bool IsDeleted { get; set; }
-        public User? CreatedBy { get; set; }
-        public User? LastModifiedBy { get; set; }
+
         public List<ProjectManagement.Models.Task> Tasks { get; set; }
     }
 }

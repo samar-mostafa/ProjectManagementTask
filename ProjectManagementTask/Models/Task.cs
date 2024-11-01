@@ -19,18 +19,11 @@ namespace ProjectManagement.Models
         public int Priority { get; set; }
         public bool IsDeleted { get; set; }
 
-        [ForeignKey(nameof(CreatedBy))]
-        public int? CreatedById { get; set; }
-        [ForeignKey(nameof(LastModifiedBy))]
-        public int? LastModifiedById { get; set; }
         [ForeignKey(nameof(AssignedTo))]
         public int? AssignedToId { get; set; }
 
         [ForeignKey(nameof(Project))]
         public string ProjectId { get; set; }
-
-        public User? CreatedBy { get; set; }
-        public User? LastModifiedBy { get; set; }
         public User? AssignedTo { get; set; }
         public Project Project { get; set; }
         public List<Comment> Comments { get; set; }
