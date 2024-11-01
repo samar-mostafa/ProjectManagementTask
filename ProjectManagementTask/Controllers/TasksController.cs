@@ -9,21 +9,28 @@ using ProjectManagement.Dtos;
 using System.Security.Claims;
 using ProjectManagement.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using ProjectManagement.Helpers;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 
 namespace TaskManagementTask.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = AppRoles.Manager)]
     public class TasksController : ControllerBase
     {
         private readonly IGenericService<ProjectManagement.Models.Task> _TaskService;
         private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
         public TasksController(IGenericService<ProjectManagement.Models.Task> TaskService, 
-            IMapper mapper)
+            IMapper mapper, UserManager<User> userManager)
         {
             _TaskService = TaskService;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet("AllTasks")]
@@ -79,15 +86,16 @@ namespace TaskManagementTask.Controllers
 
         }
 
+        [Authorize(Policy = "EmployeePolicy")]
         [HttpPost("Edit")]
         public IActionResult Edit(EditTaskDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse(400, "Sorry,Try again later."));
-
+            var userId = _userManager.GetUserId(User);
             var entity = _TaskService.GetById(dto.Id);
-            if (entity == null)
-                return BadRequest(new ApiResponse(400, "Task not found"));
+            if (entity == null || entity.AssignedToId != int.Parse(userId))
+                return BadRequest(new ApiResponse(400, "You are not allowed to update this task"));
 
             _mapper.Map(dto, entity);
             _TaskService.Update(entity);

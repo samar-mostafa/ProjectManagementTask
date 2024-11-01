@@ -4,7 +4,7 @@ using ProjectManagement.Helpers;
 
 namespace ProjectManagement.Dtos
 {
-    public class AddedTaskDto
+    public class AddTaskDto
     {
 
         [Required(AllowEmptyStrings = false, ErrorMessage = Messages.Required)]
@@ -22,13 +22,11 @@ namespace ProjectManagement.Dtos
         public string? AssignedToId { get; set; } 
         [Required(ErrorMessage = Messages.Required)]
         public string ProjectId { get; set; }
-    }
-
-    public class AddTaskDto:AddedTaskDto
-    {
         [Required(ErrorMessage = Messages.Required)]
         public TaskStatusEnum Status { get; set; }
     }
+
+    
 
 
 }

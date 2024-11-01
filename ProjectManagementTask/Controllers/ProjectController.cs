@@ -7,11 +7,14 @@ using ProjectManagement.Models;
 using ProjectManagement.Services;
 using ProjectManagement.Dtos;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using ProjectManagement.Helpers;
 
 namespace ProjectManagementTask.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = AppRoles.Manager)]
     public class ProjectController : ControllerBase
     {
         private readonly IGenericService<Project> _projectService;

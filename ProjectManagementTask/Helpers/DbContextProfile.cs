@@ -21,6 +21,9 @@ namespace ProjectManagement.Helpers
             CreateMap<AddTaskDto, ProjectManagement.Models.Task>();
             CreateMap<EditTaskDto, ProjectManagement.Models.Task>();
 
+            CreateMap<AddUserDto, User>();
+            CreateMap<User, UserDto>();
+
         }
     }
 }
