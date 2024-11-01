@@ -20,9 +20,9 @@ namespace ProjectManagement.Models
         public int Status { get; set; }
 
         [ForeignKey(nameof(CreatedBy))]
-        public string? CreatedById { get; set; }
+        public int? CreatedById { get; set; }
         [ForeignKey(nameof(LastModifiedBy))]
-        public string? LastModifiedById { get; set; }
+        public int? LastModifiedById { get; set; }
         public bool IsDeleted { get; set; }
         public User? CreatedBy { get; set; }
         public User? LastModifiedBy { get; set; }

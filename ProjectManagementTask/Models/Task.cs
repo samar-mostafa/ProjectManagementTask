@@ -20,11 +20,11 @@ namespace ProjectManagement.Models
         public bool IsDeleted { get; set; }
 
         [ForeignKey(nameof(CreatedBy))]
-        public string? CreatedById { get; set; }
+        public int? CreatedById { get; set; }
         [ForeignKey(nameof(LastModifiedBy))]
-        public string? LastModifiedById { get; set; }
+        public int? LastModifiedById { get; set; }
         [ForeignKey(nameof(AssignedTo))]
-        public string? AssignedToId { get; set; }
+        public int? AssignedToId { get; set; }
 
         [ForeignKey(nameof(Project))]
         public string ProjectId { get; set; }

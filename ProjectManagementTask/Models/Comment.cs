@@ -11,7 +11,7 @@ namespace ProjectManagement.Models
     {
         public string Description { get; set; }
         [ForeignKey(nameof(CreatedBy))]
-        public string? CreatedById { get; set; }
+        public int? CreatedById { get; set; }
         [ForeignKey(nameof(Task))]
         public string TaskId { get; set; }
         public Task Task { get; set; }
