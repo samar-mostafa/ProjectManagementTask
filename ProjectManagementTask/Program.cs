@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Configurations;
 using ProjectManagement.Helpers;
 using ProjectManagement.Models;
+using ProjectManagement.Seeds;
 using ProjectManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,8 +46,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAuthentication();
 app.UseAuthorization();
+var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+var scope = scopeFactory.CreateScope();
+var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+await DefaultRoles.SeedAsync(roleManager);
 
 app.MapControllers();
 
