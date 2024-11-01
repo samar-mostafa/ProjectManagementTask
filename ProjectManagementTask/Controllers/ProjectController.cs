@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Errors;
 using ProjectManagement.Models;
 using ProjectManagement.Services;
-using ProjectManagementTask.Dtos;
+using ProjectManagement.Dtos;
 using System.Security.Claims;
 
 namespace ProjectManagementTask.Controllers
@@ -23,14 +23,33 @@ namespace ProjectManagementTask.Controllers
         }
 
         [HttpGet("AllProjects")]
-        public async Task<IActionResult> Get()
-        {
-            var projects = _projectService.GetAll(p=>!p.IsDeleted);
+       
+            public IActionResult Get(int page = 1, int pageSize = 10)
+            {
+                var query = _projectService.GetAll(t => !t.IsDeleted);
 
-            var response = _mapper.Map<IEnumerable<ProjectDto>>(projects);
+                int totalRecords = query.AsQueryable().Count();
+                var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
 
-            return Ok(response);
-        }
+                page = Math.Max(1, page);
+                pageSize = Math.Max(1, pageSize);
+
+                var projects = query
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var response = new PaginatedResponse<ProjectDto>
+                {
+                    Data = _mapper.Map<IEnumerable<ProjectDto>>(projects),
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalPages = totalPages,
+                    TotalRecords = totalRecords
+                };
+
+                return Ok(response);
+            }
 
 
         [HttpPost("NewProject")]

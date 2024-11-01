@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ProjectManagement.Helpers;
-namespace ProjectManagementTask.Dtos
+namespace ProjectManagement.Dtos
 {
     public class AddProjectDto
     {
