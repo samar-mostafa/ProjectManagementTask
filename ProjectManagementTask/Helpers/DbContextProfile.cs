@@ -23,7 +23,9 @@ namespace ProjectManagement.Helpers
             CreateMap<EditTaskDto, ProjectManagement.Models.Task>().ReverseMap();
 
             CreateMap<AddUserDto, User>();
-            CreateMap<User, UserDto>();
+            CreateMap<User, UserDto>().
+                ForMember(des => des.UserRoles, 
+                op => op.MapFrom(src => src.UserRoles.Select(ur => ur.RoleId)));
 
         }
     }

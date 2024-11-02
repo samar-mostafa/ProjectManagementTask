@@ -15,7 +15,7 @@ namespace ProjectManagementTask.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   [Authorize(Roles = AppRoles.Employee)]
+   [Authorize(Roles = AppRoles.Manager)]
     public class ProjectController : ControllerBase
     {
         private readonly IGenericService<Project> _projectService;
@@ -30,6 +30,7 @@ namespace ProjectManagementTask.Controllers
 
         public IActionResult Get(int page = 1, int pageSize = 10)
         {
+           
             var query = _projectService.GetAll(t => !t.IsDeleted);
 
             int totalRecords = query.AsQueryable().Count();

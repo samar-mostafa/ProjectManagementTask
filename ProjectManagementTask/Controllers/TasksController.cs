@@ -19,7 +19,7 @@ namespace TaskManagementTask.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = AppRoles.Manager)]
+    [Authorize(Roles = AppRoles.Manager)]
     public class TasksController : ControllerBase
     {
         private readonly IGenericService<ProjectManagement.Models.Task> _TaskService;
@@ -86,7 +86,7 @@ namespace TaskManagementTask.Controllers
 
         }
 
-        //[Authorize(Policy = "EmployeePolicy")]
+       [Authorize(Policy = "EmployeePolicy")]
         [HttpPost("Edit")]
         public IActionResult Edit(EditTaskDto dto)
         {
@@ -157,6 +157,15 @@ namespace TaskManagementTask.Controllers
             var mdl = _mapper.Map<EditTaskDto>(entity);
             return Ok(mdl);
 
+
+        }
+
+        [HttpGet("GetStatusById/{id}")]
+        public IActionResult GetStatusById(string id)
+        {
+            var status = _TaskService.GetById(id).Status;
+        
+            return Ok(status);
 
         }
     }
