@@ -106,6 +106,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
@@ -114,6 +117,7 @@ var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
 
 await DefaultRoles.SeedAsync(roleManager);
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>endpoints.MapControllers());
+
 
 app.Run();

@@ -15,7 +15,7 @@ namespace ProjectManagementTask.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = AppRoles.Manager)]
+   [Authorize(Roles = AppRoles.Employee)]
     public class ProjectController : ControllerBase
     {
         private readonly IGenericService<Project> _projectService;
