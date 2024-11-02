@@ -14,7 +14,7 @@ namespace ProjectManagementTask.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = AppRoles.Manager)]
+    //[Authorize(Roles = AppRoles.Manager)]
     public class ProjectController : ControllerBase
     {
         private readonly IGenericService<Project> _projectService;
@@ -66,7 +66,7 @@ namespace ProjectManagementTask.Controllers
             return Ok(new ApiResponse(200, "Added Successfully"));
         }
 
-        [HttpPost("ChangeStatus")]
+        [HttpGet("ChangeStatus/{id}")]
         public IActionResult ChangeStatus(string id)
         {
             var entity = _projectService.GetById(id);
@@ -94,7 +94,7 @@ namespace ProjectManagementTask.Controllers
             return Ok(new ApiResponse(200, "edited  Successfully"));
         }
 
-        [HttpPost("Delete")]
+        [HttpGet("Delete/{id}")]
         public IActionResult Delete(string id) 
         {
             var entity = _projectService.GetById(id);
@@ -103,6 +103,19 @@ namespace ProjectManagementTask.Controllers
             entity.IsDeleted = true;
             _projectService.Update(entity);
             return Ok(new ApiResponse(200, "deleted Successfully"));
+
+
+        }
+
+        [HttpGet("GetById/{id}")]
+        public IActionResult GetById(string id)
+        {
+            var entity = _projectService.GetById(id);
+            if (entity == null)
+                return BadRequest(new ApiResponse(400, "project not found"));
+
+            var mdl = _mapper.Map<EditProjectDto>(entity);
+            return Ok(mdl);
 
 
         }

@@ -12,7 +12,7 @@ namespace ProjectManagement.Helpers
 
             CreateMap<Project, ProjectDto>();
             CreateMap<AddProjectDto,Project>();
-            CreateMap<EditProjectDto, Project>();
+            CreateMap<EditProjectDto, Project>().ReverseMap();
 
             CreateMap<ProjectManagement.Models.Task, TaskDto>()
                 .ForMember(des=>des.ProjectName,op=>op.MapFrom(src=>src.Project.Name))

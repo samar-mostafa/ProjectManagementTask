@@ -19,7 +19,7 @@ namespace TaskManagementTask.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = AppRoles.Manager)]
+    //[Authorize(Roles = AppRoles.Manager)]
     public class TasksController : ControllerBase
     {
         private readonly IGenericService<ProjectManagement.Models.Task> _TaskService;
@@ -86,7 +86,7 @@ namespace TaskManagementTask.Controllers
 
         }
 
-        [Authorize(Policy = "EmployeePolicy")]
+        //[Authorize(Policy = "EmployeePolicy")]
         [HttpPost("Edit")]
         public IActionResult Edit(EditTaskDto dto)
         {
@@ -102,7 +102,7 @@ namespace TaskManagementTask.Controllers
             return Ok(new ApiResponse(200, "edited  Successfully"));
         }
 
-        [HttpPost("Delete")]
+        [HttpGet("Delete/{id}")]
         public IActionResult Delete(string id)
         {
             var entity = _TaskService.GetById(id);
@@ -145,6 +145,19 @@ namespace TaskManagementTask.Controllers
                 return BadRequest(new ApiResponse(404, "there is no overdue tasks"));
             else 
                 return Ok(tasks);
+        }
+
+        [HttpGet("GetById/{id}")]
+        public IActionResult GetById(string id)
+        {
+            var entity = _TaskService.GetById(id);
+            if (entity == null)
+                return BadRequest(new ApiResponse(400, "task not found"));
+
+            var mdl = _mapper.Map<EditProjectDto>(entity);
+            return Ok(mdl);
+
+
         }
     }
 }
