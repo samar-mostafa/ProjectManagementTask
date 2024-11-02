@@ -19,7 +19,8 @@ namespace ProjectManagement.Helpers
                 .ForMember(des => des.Status, op => op.MapFrom(src =>
                 Enum.GetName(typeof(TaskStatusEnum),src.Status)));
             CreateMap<AddTaskDto, ProjectManagement.Models.Task>();
-            CreateMap<EditTaskDto, ProjectManagement.Models.Task>();
+                
+            CreateMap<EditTaskDto, ProjectManagement.Models.Task>().ReverseMap();
 
             CreateMap<AddUserDto, User>();
             CreateMap<User, UserDto>();

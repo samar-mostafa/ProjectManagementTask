@@ -9,6 +9,7 @@ using ProjectManagement.Dtos;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using ProjectManagement.Helpers;
+using ProjectManagementTask.Dtos;
 
 namespace ProjectManagementTask.Controllers
 {
@@ -26,33 +27,33 @@ namespace ProjectManagementTask.Controllers
         }
 
         [HttpGet("AllProjects")]
-       
-            public IActionResult Get(int page = 1, int pageSize = 10)
+
+        public IActionResult Get(int page = 1, int pageSize = 10)
+        {
+            var query = _projectService.GetAll(t => !t.IsDeleted);
+
+            int totalRecords = query.AsQueryable().Count();
+            var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+            page = Math.Max(1, page);
+            pageSize = Math.Max(1, pageSize);
+
+            var projects = query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var response = new PaginatedResponse<ProjectDto>
             {
-                var query = _projectService.GetAll(t => !t.IsDeleted);
+                Data = _mapper.Map<IEnumerable<ProjectDto>>(projects),
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = totalPages,
+                TotalRecords = totalRecords
+            };
 
-                int totalRecords = query.AsQueryable().Count();
-                var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
-
-                page = Math.Max(1, page);
-                pageSize = Math.Max(1, pageSize);
-
-                var projects = query
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();
-
-                var response = new PaginatedResponse<ProjectDto>
-                {
-                    Data = _mapper.Map<IEnumerable<ProjectDto>>(projects),
-                    Page = page,
-                    PageSize = pageSize,
-                    TotalPages = totalPages,
-                    TotalRecords = totalRecords
-                };
-
-                return Ok(response);
-            }
+            return Ok(response);
+        }
 
 
         [HttpPost("NewProject")]
@@ -73,7 +74,7 @@ namespace ProjectManagementTask.Controllers
             if (entity == null)
                 return BadRequest(new ApiResponse(400, "project not found"));
 
-            entity.Status= !entity.Status;
+            entity.Status = !entity.Status;
             _projectService.Update(entity);
             return Ok(new ApiResponse(200, "status changed Successfully"));
 
@@ -89,13 +90,13 @@ namespace ProjectManagementTask.Controllers
             if (entity == null)
                 return BadRequest(new ApiResponse(400, "project not found"));
 
-             entity = _mapper.Map(dto,entity);
+            entity = _mapper.Map(dto, entity);
             _projectService.Update(entity);
             return Ok(new ApiResponse(200, "edited  Successfully"));
         }
 
         [HttpGet("Delete/{id}")]
-        public IActionResult Delete(string id) 
+        public IActionResult Delete(string id)
         {
             var entity = _projectService.GetById(id);
             if (entity == null)
@@ -118,6 +119,20 @@ namespace ProjectManagementTask.Controllers
             return Ok(mdl);
 
 
+        }
+
+        [HttpGet("GetNames")]
+        public IActionResult GetNames()
+        {
+            var projects = _projectService.GetAll().Select(p=>new IdNameDto
+            {
+                Id=p.Id,
+                Name=p.Name
+            }).ToList();
+            if (projects == null)
+                return BadRequest(new ApiResponse(400, "project not found"));
+
+            return Ok(projects);
         }
     }
 }

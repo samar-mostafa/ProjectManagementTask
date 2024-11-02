@@ -74,13 +74,13 @@ namespace TaskManagementTask.Controllers
         }
 
         [HttpPost("ChangeStatus")]
-        public IActionResult ChangeStatus(string id , TaskStatusEnum status)
+        public IActionResult ChangeStatus(string id , int status)
         {
             var entity = _TaskService.GetById(id);
             if (entity == null)
                 return BadRequest(new ApiResponse(400, "Task not found"));
 
-            entity.Status =(int)status;
+            entity.Status =status;
             _TaskService.Update(entity);
             return Ok(new ApiResponse(200, "status changed Successfully"));
 
@@ -154,7 +154,7 @@ namespace TaskManagementTask.Controllers
             if (entity == null)
                 return BadRequest(new ApiResponse(400, "task not found"));
 
-            var mdl = _mapper.Map<EditProjectDto>(entity);
+            var mdl = _mapper.Map<EditTaskDto>(entity);
             return Ok(mdl);
 
 
